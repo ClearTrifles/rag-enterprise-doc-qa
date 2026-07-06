@@ -253,7 +253,7 @@ MIT License
 
 ---
 
-**作者**: Enterprise RAG Team  
+**作者**: ClearTrifles 
 **版本**: 1.0.0  
 **更新日期**: 2026-06-18
 

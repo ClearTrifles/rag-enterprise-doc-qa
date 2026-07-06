@@ -1,4 +1,5 @@
-# 企业级RAG文档问答系统
+
+# 企业级RAG文档问答系统 rag-enterprise-doc-qa
 
 <p align="center">
     <img src="https://img.shields.io/badge/Java-21-brightgreen" alt="Java">
@@ -255,3 +256,4 @@ MIT License
 **作者**: Enterprise RAG Team  
 **版本**: 1.0.0  
 **更新日期**: 2026-06-18
+

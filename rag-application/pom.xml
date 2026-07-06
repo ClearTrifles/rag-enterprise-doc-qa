@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.enterprise</groupId>
+        <artifactId>rag-enterprise-doc-qa</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- 应用模块：业务编排、事务管理、应用服务实现 -->
+    <artifactId>rag-application</artifactId>
+    <packaging>jar</packaging>
+
+    <name>RAG Application Module</name>
+    <description>应用模块：文档服务、向量服务、问答服务、RAG流程编排</description>
+
+    <dependencies>
+        <!-- 依赖领域模块 -->
+        <dependency>
+            <groupId>com.enterprise</groupId>
+            <artifactId>rag-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- 依赖基础设施模块 -->
+        <dependency>
+            <groupId>com.enterprise</groupId>
+            <artifactId>rag-infrastructure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Spring Boot异步任务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Scheduling定时任务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
+        <!-- JSON处理 - Fastjson -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
+
+        <!-- Resilience4j熔断 -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-spring-boot3</artifactId>
+        </dependency>
+
+        <!-- 重试机制 - Guava Retrying -->
+        <dependency>
+            <groupId>com.github.rholder</groupId>
+            <artifactId>guava-retrying</artifactId>
+        </dependency>
+
+        <!-- 测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito JUnit 5扩展 -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

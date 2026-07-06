@@ -1,0 +1,123 @@
+# 企业级RAG文档问答系统 - Git忽略配置
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDEA / Eclipse
+.idea/
+*.iws
+*.iml
+*.ipr
+.idea/
+*.classpath
+*.project
+*.settings/
+bin/
+build/
+!.mvn/wrapper/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Spring Boot
+spring-boot-starter-*
+
+# 日志文件
+*.log
+logs/
+*.log.*
+
+# 临时文件目录
+temp-file/
+temp/
+tmp/
+
+# 上传文件目录（仅本地使用）
+uploads/
+documents/
+/documents/
+
+# 敏感配置文件 - 本地开发配置
+config/
+application-local*.yml
+application-local*.yaml
+*-local.yml
+*-local.yaml
+**/resources/application-local*.yml
+**/resources/application-local*.yaml
+!**/resources/application.yml
+!**/resources/application-*.yml
+!**/resources/bootstrap.yml
+
+# 密钥和证书
+*.pem
+*.key
+*.pfx
+*.jks
+*.keystore
+*.truststore
+credentials.properties
+secrets.yml
+secrets.yaml
+.env
+.env.*
+secrets/
+.keystore
+
+# 数据库
+*.db
+*.sqlite
+*.h2.db
+*.mv.db
+
+# Chroma向量库本地数据
+chroma/
+chroma_data/
+chromadb/
+
+# 测试覆盖率报告
+jacoco/
+*.exec
+*.gcda
+*.gcno
+coverage/
+htmlcov/
+
+# Maven打包文件
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# 操作系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Node / NPM (如有前端)
+# node_modules/
+# package-lock.json
+
+# Python (如有脚本)
+# __pycache__/
+# *.py[cod]
+# .venv/
+
+# MyBatis Plus
+*Mapper.xml
+*Mapper.java
+
+# JUnit测试输出
+/test-output/
+/surefire-reports/

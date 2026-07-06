@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "企业级RAG文档问答系统",
+    "description": "RAG系统接口测试脚本",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "文档管理",
+      "item": [
+        {
+          "name": "上传文档",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/documents",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "documentName",
+                  "value": "测试文档",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "value": "",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "description": "上传PDF/TXT/DOCX文档"
+          },
+          "response": []
+        },
+        {
+          "name": "文档列表",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/documents",
+            "header": [],
+            "description": "分页查询文档列表"
+          },
+          "response": []
+        },
+        {
+          "name": "文档详情",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/documents/{{documentId}}",
+            "header": [],
+            "description": "获取文档详情"
+          },
+          "response": []
+        },
+        {
+          "name": "更新文档状态",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/api/documents/{{documentId}}/status?status=1",
+            "header": [],
+            "description": "更新文档启用/禁用状态"
+          },
+          "response": []
+        },
+        {
+          "name": "删除文档",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/documents/{{documentId}}",
+            "header": [],
+            "description": "删除文档及其关联向量"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "智能问答",
+      "item": [
+        {
+          "name": "智能问答",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/qa/ask",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"什么是RAG?\",\n  \"sessionId\": \"test-session-001\"\n}"
+            },
+            "description": "基于RAG的智能问答"
+          },
+          "response": []
+        },
+        {
+          "name": "问答历史",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/qa/history?sessionId=test-session-001",
+            "header": [],
+            "description": "获取问答历史"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "documentId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}

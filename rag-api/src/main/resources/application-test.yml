@@ -1,0 +1,84 @@
+# ===========================================
+# 测试环境配置（集成测试/预发布测试）
+# 启动命令：java -jar rag-api.jar --spring.profiles.active=test
+# ===========================================
+
+# ===========================================
+# 数据库连接配置（测试环境MySQL）
+# ===========================================
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:test-mysql}:${DB_PORT:3306}/${DB_NAME:rag_doc_db_test}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root123456}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 30
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # ===========================================
+  # Redis缓存配置（测试环境）
+  # ===========================================
+  data:
+    redis:
+      host: ${REDIS_HOST:test-redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 1
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 4
+          max-wait: 2000ms
+
+# ===========================================
+# Redisson分布式锁配置（测试环境）
+# ===========================================
+redisson:
+  address: redis://${REDIS_HOST:test-redis}:${REDIS_PORT:6379}
+  database: 1
+  connection-minimum-idle-size: 10
+  connection-pool-size: 30
+
+# ===========================================
+# 通义千问API配置（测试环境）
+# ===========================================
+qwen:
+  api-key: ${QWEN_API_KEY}
+  base-url: https://dashscope.aliyuncs.com/api/v1
+  model:
+    chat: qwen-plus
+    embedding: text-embedding-v2
+  timeout: 60000
+
+# ===========================================
+# Chroma向量库配置（测试环境）
+# ===========================================
+chroma:
+  host: ${CHROMA_HOST:test-chroma}
+  port: ${CHROMA_PORT:8000}
+  collection-name: rag_documents_test
+
+# ===========================================
+# 文件存储配置（测试环境）
+# ===========================================
+file:
+  storage:
+    type: local
+    base-path: ./temp-file-test
+    max-size: 100MB
+    allowed-types: pdf,doc,docx,xlsx,xls,txt,md
+
+# ===========================================
+# 测试环境日志级别
+# ===========================================
+logging:
+  level:
+    root: INFO
+    com.enterprise.rag: INFO
+    org.springframework.web: INFO

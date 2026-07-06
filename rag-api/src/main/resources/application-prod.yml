@@ -1,0 +1,90 @@
+# ===========================================
+# 生产环境配置（正式上线使用）
+# 启动命令：java -jar rag-api.jar --spring.profiles.active=prod
+# 注意：所有敏感配置必须通过环境变量注入，禁止硬编码
+# ===========================================
+
+# ===========================================
+# 数据库连接配置（生产环境MySQL）
+# ===========================================
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      validation-timeout: 3000
+      leak-detection-threshold: 60000
+
+  # ===========================================
+  # Redis缓存配置（生产环境）
+  # ===========================================
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      database: 2
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 32
+          max-idle: 16
+          min-idle: 8
+          max-wait: 3000ms
+
+# ===========================================
+# Redisson分布式锁配置（生产环境）
+# ===========================================
+redisson:
+  address: redis://${REDIS_HOST}:${REDIS_PORT}
+  password: ${REDIS_PASSWORD}
+  database: 2
+  connection-minimum-idle-size: 20
+  connection-pool-size: 50
+
+# ===========================================
+# 通义千问API配置（生产环境）
+# ===========================================
+qwen:
+  api-key: ${QWEN_API_KEY}
+  base-url: https://dashscope.aliyuncs.com/api/v1
+  model:
+    chat: qwen-max
+    embedding: text-embedding-v3
+  timeout: 120000
+
+# ===========================================
+# Chroma向量库配置（生产环境）
+# ===========================================
+chroma:
+  host: ${CHROMA_HOST}
+  port: ${CHROMA_PORT}
+  collection-name: rag_documents_prod
+
+# ===========================================
+# 文件存储配置（生产环境）
+# 注意：当前阶段禁止上云，仅使用本地存储
+# 架构预留OSS接口，后续可无缝迁移
+# ===========================================
+file:
+  storage:
+    type: local
+    base-path: ${FILE_STORAGE_PATH:/data/rag/temp-file}
+    max-size: 100MB
+    allowed-types: pdf,doc,docx,xlsx,xls,txt,md
+
+# ===========================================
+# 生产环境日志级别
+# ===========================================
+logging:
+  level:
+    root: WARN
+    com.enterprise.rag: INFO
+    org.springframework.web: WARN

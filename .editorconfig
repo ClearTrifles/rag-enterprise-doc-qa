@@ -1,0 +1,68 @@
+# EditorConfig 企业级Java项目统一代码风格
+# 官网: https://editorconfig.org
+
+# 根目录配置文件，无需再设置root=true
+root = true
+
+# 所有文件统一配置
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Java源代码文件
+[*.java]
+indent_style = space
+indent_size = 4
+max_line_length = 180
+
+# Maven配置文件
+[*.xml]
+indent_style = space
+indent_size = 4
+
+# YAML配置文件
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Properties配置文件
+[*.properties]
+indent_style = space
+indent_size = 4
+
+# Markdown文档
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+
+# JSON文件
+[*.json]
+indent_style = space
+indent_size = 2
+
+# Shell脚本
+[*.sh]
+indent_style = space
+indent_size = 4
+
+# Windows批处理
+[*.bat]
+end_of_line = crlf
+
+# SQL文件
+[*.sql]
+indent_style = space
+indent_size = 4
+
+# Gradle
+[*.gradle]
+indent_style = space
+indent_size = 4
+
+# HTML/CSS/JS (如有前端)
+[*.{html,css,js}]
+indent_style = space
+indent_size = 2
+max_line_length = 200

@@ -1,0 +1,206 @@
+# ===========================================
+# 开发环境配置（本地开发使用）
+# 启动命令：java -jar rag-api.jar 或 mvn spring-boot:run
+# ===========================================
+
+# ===========================================
+# 数据库连接配置（本地MySQL）
+# ===========================================
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rag_doc_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # ===========================================
+  # Redis缓存配置（本地）
+  # ===========================================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: 2000ms
+
+# ===========================================
+# Redisson分布式锁配置（本地）
+# ===========================================
+redisson:
+  address: redis://localhost:6379
+  database: 0
+  connection-minimum-idle-size: 5
+  connection-pool-size: 20
+
+# ===========================================
+# 通义千问AI配置 【只读本机系统环境变量，无明文密钥】
+# ===========================================
+qwen:
+  # 直接读取系统环境变量 aliQwen-api
+  api-key: ${aliQwen-api}
+  api-host: https://dashscope.aliyuncs.com
+  # 固定模型配置，项目预设无需修改
+  chat-model: qwen3.6-flash
+  embedding-model: text-embedding-v3
+  # AI调用超时配置
+  connect-timeout: 15000
+  read-timeout: 30000
+
+# ===========================================
+# RAG全局参数（固定不变，面试可调优）
+# ===========================================
+rag:
+  chunk-size: 512
+  chunk-overlap: 120
+  similarity-threshold: 0.75
+  recall-top-num: 5
+
+# ===========================================
+# Chroma向量库配置（本地嵌入式）
+# ===========================================
+chroma:
+  host: localhost
+  port: 8000
+  collection-name: rag_documents
+
+# ===========================================
+# 文件存储配置（本地temp-file目录）
+# ===========================================
+file:
+  storage:
+    type: local
+    base-path: ./temp-file
+    max-size: 100MB
+    allowed-types: pdf,doc,docx,xlsx,xls,txt,md
+
+# ===========================================
+# Swagger接口文档配置
+# ===========================================
+swagger:
+  enabled: true
+  title: 企业级RAG文档问答系统API
+  description: RAG系统接口文档，支持文档上传、智能问答等功能
+  version: v1.0
+  contact-name: Enterprise RAG Team
+  contact-email: rag@enterprise.com
+  group-name: rag-api
+  base-package: com.enterprise.rag.api.controller
+  path-mapping: /
+
+# ===========================================
+# MyBatis-Plus配置
+# ===========================================
+mybatis-plus:
+  config:
+    mapper-locations: classpath*:/mapper/**/*.xml
+    type-aliases-package: com.enterprise.rag.domain.entity
+    global-config:
+      db-config:
+        id-type: auto
+        logic-delete-field: isDelete
+        logic-delete-value: 1
+        logic-not-delete-value: 0
+      banner: false
+    configuration:
+      map-underscore-to-camel-case: true
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# ===========================================
+# Resilience4j熔断配置
+# ===========================================
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 100
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        wait-duration-in-open-state: 5s
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      qwenApi:
+        base-config: default
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 10s
+      chromaDb:
+        base-config: default
+        failure-rate-threshold: 40
+        wait-duration-in-open-state: 8s
+
+# ===========================================
+# Guava重试配置
+# ===========================================
+guava:
+  retry:
+    default:
+      max-attempts: 3
+      wait-duration: 500ms
+      exponential-backoff-multiplier: 2
+    ai-service:
+      max-attempts: 3
+      wait-duration: 1000ms
+      exponential-backoff-multiplier: 2
+    vector-db:
+      max-attempts: 2
+      wait-duration: 300ms
+      exponential-backoff-multiplier: 1.5
+
+# ===========================================
+# 线程池配置
+# ===========================================
+thread-pool:
+  file-parser:
+    core-size: 4
+    max-size: 8
+    queue-capacity: 100
+    thread-name-prefix: file-parser-
+    keep-alive-time: 60s
+  ai-call:
+    core-size: 4
+    max-size: 8
+    queue-capacity: 50
+    thread-name-prefix: ai-call-
+    keep-alive-time: 60s
+  scheduled:
+    core-size: 2
+    thread-name-prefix: scheduled-
+
+# ===========================================
+# Redis限流配置
+# ===========================================
+rate-limiter:
+  default:
+    limit: 10
+    period: 60s
+  qa-api:
+    limit: 10
+    period: 60s
+  document-api:
+    limit: 5
+    period: 60s
+
+# ===========================================
+# 开发环境日志级别
+# ===========================================
+logging:
+  level:
+    root: INFO
+    com.enterprise.rag: DEBUG
+    org.springframework.web: DEBUG

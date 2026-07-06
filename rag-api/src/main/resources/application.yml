@@ -1,0 +1,215 @@
+# ===========================================
+# Spring Boot 主配置文件（公共配置，所有环境共享）
+# 配置文件加载顺序：application.yml → application-{profile}.yml
+# 环境配置文件会覆盖主配置文件中的同名配置项
+# ===========================================
+spring:
+  application:
+    name: rag-enterprise-doc-qa
+
+  # 默认激活开发环境（本地开发时使用dev配置）
+  profiles:
+    active: dev
+
+  # 编码配置
+  charset: UTF-8
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+  # 线程池配置（文件上传、AI调用专用）
+  task:
+    execution:
+      pool:
+        core-size: 4
+        max-size: 16
+        queue-capacity: 100
+      thread-name-prefix: rag-async-
+
+# ===========================================
+# MyBatis-Plus 配置
+# ===========================================
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.enterprise.rag.domain.entity
+  mapper-packages: com.enterprise.rag.infrastructure.mapper
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  # 自定义配置属性
+  config:
+    db-type: mysql
+    mapper-packages: com.enterprise.rag.infrastructure.mapper
+    optimistic-lock-enabled: true
+    pagination:
+      max-limit: 1000
+      overflow: false
+
+# ===========================================
+# Springdoc OpenAPI 3 配置
+# ===========================================
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  group-configs:
+    - group: 'default'
+      packages-to-scan: com.enterprise.rag.api.controller
+
+# ===========================================
+# Knife4j 增强文档配置
+# ===========================================
+knife4j:
+  enable: true
+  openapi:
+    title: RAG企业文档问答系统
+    description: 企业级本地RAG文档智能问答系统接口文档
+    version: 1.0.0
+    contact:
+      name: RAG-Enterprise-Team
+
+# ===========================================
+# Swagger 自定义配置
+# ===========================================
+swagger:
+  title: RAG企业文档问答系统
+  description: 企业级本地RAG文档智能问答系统接口文档
+  version: 1.0.0
+  contact:
+    name: RAG-Enterprise-Team
+    email: support@enterprise.com
+    url: https://enterprise.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  security:
+    scheme-name: Authorization
+    scheme: bearer
+    bearer-format: JWT
+    description: JWT认证令牌
+  scan:
+    base-packages:
+      - com.enterprise.rag.api.controller
+    paths:
+      - /**
+
+# ===========================================
+# Actuator 监控配置
+# ===========================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# ===========================================
+# 文件上传配置
+# ===========================================
+spring.servlet:
+  multipart:
+    enabled: true
+    max-file-size: 100MB
+    max-request-size: 200MB
+
+# ===========================================
+# Resilience4j 熔断限流配置
+# ===========================================
+resilience4j:
+  circuitbreaker:
+    # 自定义配置属性（用于CircuitBreakerProperties）
+    sliding-window-size: 10
+    sliding-window-type: COUNT_BASED
+    failure-rate-threshold: 50
+    slow-call-rate-threshold: 50
+    slow-call-duration-threshold: 2s
+    wait-duration-in-open-state: 60s
+    permitted-number-of-calls-in-half-open-state: 3
+    minimum-number-of-calls: 5
+    automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      qwenApi:
+        sliding-window-size: 20
+        failure-rate-threshold: 60
+        wait-duration-in-open-state: 30s
+      chromaDb:
+        sliding-window-size: 10
+        failure-rate-threshold: 40
+        wait-duration-in-open-state: 60s
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 2s
+        retry-exceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+    instances:
+      qwenApi:
+        base-config: default
+  ratelimiter:
+    configs:
+      default:
+        limit-for-period: 100
+        limit-refresh-period: 60s
+        timeout-duration: 10s
+    instances:
+      chatApi:
+        base-config: default
+
+# ===========================================
+# Guava Retrying 重试配置
+# ===========================================
+guava:
+  retry:
+    default-config:
+      max-attempts: 3
+      wait-duration: 2s
+      wait-strategy-type: FIXED
+      retry-exceptions:
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+    ai-service:
+      max-attempts: 5
+      wait-duration: 1s
+      max-wait-duration: 30s
+      wait-strategy-type: EXPONENTIAL
+      retry-exceptions:
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+    vector-db:
+      max-attempts: 3
+      wait-duration: 1s
+      wait-strategy-type: FIXED
+      retry-exceptions:
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+
+# ===========================================
+# 日志配置
+# ===========================================
+logging:
+  level:
+    root: INFO
+    com.enterprise.rag: DEBUG
+    org.springframework.web: INFO
+    org.apache: WARN
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'

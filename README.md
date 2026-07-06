@@ -4,7 +4,7 @@
 <p align="center">
     <img src="https://img.shields.io/badge/Java-21-brightgreen" alt="Java">
     <img src="https://img.shields.io/badge/Spring%20Boot-3.3.0-brightgreen" alt="Spring Boot">
-    <img src="https://img.shields.io/badge/MyBatis-Plus-3.5.7-brightgreen" alt="MyBatis-Plus">
+    <img src="https://img.shields.io/badge/MyBatis-Plus-brightgreen" alt="MyBatis-Plus">
     <img src="https://img.shields.io/badge/RAG-ChromaDB-brightgreen" alt="ChromaDB">
     <img src="https://img.shields.io/badge/LLM-通义千问-brightgreen" alt="Qwen">
 </p>
